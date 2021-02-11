@@ -1,10 +1,9 @@
 require('utils')
 
-function mix(midiSequenceA, midiSequenceB)
+function mix(midiSequenceA, midiSequenceB, silence_rate, lower_diff_percentage, upper_diff_percentage, num_attempts)
   -- 0. ESTABLISH CONSTANTS
   magnification_factor = 1
   p = 2 -- p is the number of patterns
-  sr = 0.7 -- the Silence Rate, how probable it is that a note in the matrix (piano roll representation will be a silence)
 
   -- 1.2 Sort its events (to ensure that the following steps will work correctly)
   sortEvents(midiSequenceA.tracks[1].events)
@@ -77,8 +76,8 @@ function mix(midiSequenceA, midiSequenceB)
   --  print("n = " .. n)
 
   -- 3.3 Establish the lower and upper difference limits
-  lower_diff_limit = math.floor((m * n) * 0.05) -- %5 of the total size of the example arrays
-  upper_diff_limit = math.floor((m * n) * 0.70) -- %70 of the total size of the example arrays
+  lower_diff_limit = math.floor((m * n) * lower_diff_percentage)
+  upper_diff_limit = math.floor((m * n) * upper_diff_percentage)
   --  print("lower_diff_limit = " .. lower_diff_limit)
   --  print("upper_diff_limit = " .. upper_diff_limit)
 
@@ -148,10 +147,10 @@ function mix(midiSequenceA, midiSequenceB)
   w = subtract_matrices(w, ii)
 
   --[[ 8. OBTAIN VARIATION GIVEN RANDOM INPUT --]]
-  while (true) do
+  while (num_attempts > 0) do
     -- print("Trying...")
     -- 8.1. generate a table of size m * n with random zeroes (-1s) and ones (1s)
-    x = get_random_input(m * n, sr)
+    x = get_random_input(m * n, silence_rate)
     -- 8.2. slightly transform the random input using matrix w
     u = vector_matrix_dot_product(x, w)
     -- 8.3. apply the activation function to get the result
@@ -162,10 +161,11 @@ function mix(midiSequenceA, midiSequenceB)
     diff2 = calculate_binary_difference(zb, result)
     -- print("diff2 is: " .. diff2)
     -- 8.5. if the resulting vector is sufficiently different, then ok. Else start again from new input
-    -- if lower_diff_limit < diff1 and diff1 < upper_diff_limit and lower_diff_limit < diff2 and diff2 < upper_diff_limit then
-    -- print("It happened")
-    break
-    -- end -- if
+    if lower_diff_limit < diff1 and diff1 < upper_diff_limit and lower_diff_limit < diff2 and diff2 < upper_diff_limit then
+      print("It happened")
+      break
+    end -- if
+    num_attempts = num_attempts - 1
   end -- while
 
   --[[ 9. TRANSFORM VARIATION RESULT INTO MIDI FILE --]]
