@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin id="associative-memory-mixer-macro-page" rootpath="C:/Users/mgtca/Desktop/Code-Associative-Memory-Mixer" schemeversion="1">
+	<topgroup id="Macro Page" coordinates="0, 0, 595, 390" locksize="true">
+		<templateview id="PathBrowserB" coordinates="61, 144, 221, 31" template="PathBrowser" parameters="1#Value=@0:Lua Script/@par:pathB" />
+		<templateview id="PathBrowserA" coordinates="61, 64, 221, 31" template="PathBrowser" parameters="1#Value=@0:Lua Script/@par:pathA" />
+		<image id="Back" coordinates="0, 0, 595, 390" bitmap="Background" />
+	</topgroup>
+	<resources id="resources">
+		<bitmap id="Background" path="vstsound://739012FE4E534E7C815788E220B4C4DA/.resources/macropages/resources/HS_Macro_Default_Back.png" />
+		<resources id="Basic Controls">
+			<resources id="Base Bitmaps">
+				<bitmap id="Basic Controls Bitmap" path="vstsound://739012FE4E534E7C815788E220B4C4DA/.resources/macropages/resources/Base_Bitmaps/Basic_Controls_Bitmap.png" />
+			</resources>
+			<resources id="PathAndPresetControl">
+				<resources id="Switches">
+					<section id="PP_Sw_Open Off" bitmap="Basic Controls Bitmap" coordinates="565, 4, 21, 17" frames="1" />
+					<section id="PP_Sw_Open On" bitmap="Basic Controls Bitmap" coordinates="565, 23, 21, 17" frames="1" />
+					<section id="PP_Sw_Open Hover" bitmap="Basic Controls Bitmap" coordinates="565, 42, 21, 17" frames="1" />
+				</resources>
+			</resources>
+			<resources id="Fonts">
+				<font id="Standard_Grey" size="11" color="199, 199, 199, 200" />
+				<font id="Standard_W" size="11" color="255, 255, 255, 200" />
+				<font id="HALion Label" size="11" path="vstsound://739012FE4E534E7C815788E220B4C4DA/.resources/macropages/resources/Fonts/HALion_Label.ttf" />
+				<font id="Standard_B" size="11" color="0, 0, 0, 220" />
+				<font id="Standard_Bold_W" size="11" color="255, 255, 255, 200" style="bold" />
+				<font id="HALion Doc Header" size="24" color="254, 254, 254, 220" path="vstsound://739012FE4E534E7C815788E220B4C4DA/.resources/macropages/resources/Fonts/HALion_Label.ttf" />
+				<font id="HALion Doc Titel" size="18" color="254, 254, 254, 220" path="vstsound://739012FE4E534E7C815788E220B4C4DA/.resources/macropages/resources/Fonts/HALion_Label.ttf" />
+				<font id="HALion Doc SubTitel" size="13" color="254, 254, 254, 220" path="vstsound://739012FE4E534E7C815788E220B4C4DA/.resources/macropages/resources/Fonts/HALion_Label.ttf" />
+			</resources>
+			<resources id="Text Value Menus">
+				<resources id="Flat">
+					<section id="TextBack DarkGrey Flat" bitmap="Basic Controls Bitmap" coordinates="80, 34, 36, 16" margins="5, 5, 5, 5" />
+					<section id="TextBack Black Flat" bitmap="Basic Controls Bitmap" coordinates="80, 51, 36, 16" margins="5, 5, 5, 5" />
+				</resources>
+				<resources id="Embedded">
+					<section id="TextBack Black" bitmap="Basic Controls Bitmap" coordinates="0, 51, 36, 16" margins="5, 5, 5, 5" />
+					<section id="TextBack DarkGrey" bitmap="Basic Controls Bitmap" coordinates="0, 34, 36, 16" margins="5, 5, 5, 5" />
+					<section id="TextBack White" bitmap="Basic Controls Bitmap" coordinates="0, 0, 36, 16" margins="5, 5, 5, 5" />
+				</resources>
+				<resources id="UpDown Switches">
+					<section id="Sw_Value_Down_Dark_Off" bitmap="Basic Controls Bitmap" coordinates="265, 48, 11, 6" />
+					<section id="Sw_Value_Down_On" bitmap="Basic Controls Bitmap" coordinates="265, 58, 11, 6" />
+					<section id="Sw_Value_Up_Dark_Off" bitmap="Basic Controls Bitmap" coordinates="252, 48, 11, 6" />
+					<section id="Sw_Value_Up_On" bitmap="Basic Controls Bitmap" coordinates="252, 58, 11, 6" />
+				</resources>
+			</resources>
+			<resources id="Switch">
+				<resources id="Sw Page">
+					<section id="Switch Page Off Hover" bitmap="Basic Controls Bitmap" coordinates="771, 42, 23, 19" margins="4, 4, 4, 4" />
+				</resources>
+			</resources>
+			<resources id="Decoration">
+				<resources id="Frames">
+					<section id="Frame Round3 2p" bitmap="Basic Controls Bitmap" coordinates="368, 198, 35, 32" scalemode="tileborder" margins="5, 5, 5, 5" />
+				</resources>
+				<bitmap id="LibraryLabel" path="vstsound://739012FE4E534E7C815788E220B4C4DA/.resources/macropages/resources/Decoration/LibraryLabel.png" frames="-1" />
+			</resources>
+			<bitmap id="About Back" path="vstsound://739012FE4E534E7C815788E220B4C4DA/.resources/macropages/resources/About_Back.png" />
+			<resources id="Doc">
+				<bitmap id="Doc_Parts" path="vstsound://739012FE4E534E7C815788E220B4C4DA/.resources/macropages/resources/Doc/Doc_Parts.png" />
+				<section id="Steinberg_Logo" bitmap="Doc_Parts" coordinates="119, 13, 139, 39" />
+				<section id="Hover_Dark" bitmap="Doc_Parts" coordinates="16, 56, 80, 32" />
+				<section id="Hover_Light" bitmap="Doc_Parts" coordinates="16, 16, 80, 32" />
+				<bitmap id="Doc_Back" path="vstsound://739012FE4E534E7C815788E220B4C4DA/.resources/macropages/resources/Doc/Doc_Back.png" margins="12, 100, 12, 20" />
+			</resources>
+		</resources>
+	</resources>
+	<library id="library">
+		<library id="Basic Controls">
+			<library id="Path and Preset Controls">
+				<template id="PathBrowser" coordinates="0, 0, 221, 31" controller="PathController:TYPE:{3#Extension}|TYPENAME:{2#Typename}|TITLE:{4#Title}|TAG:{5#Tag}{1#Value}">
+					<switch id="switch" value="@Browse" attachment="left" coordinates="2, 8, 21, 17" bitmapOff="PP_Sw_Open Off" bitmapOffDown="PP_Sw_Open On" bitmapOffHover="PP_Sw_Open Hover" style="hover" />
+					<dropview id="dropview" value="@Path" attachment="left|right" coordinates="27, 7, 188, 19" tooltip="Drop File Here" acceptfilter=".*\.{3#Extension}" style="path|scalable" />
+					<text id="text" value="@Path" attachment="left|right" coordinates="32, 7, 180, 16" font="Standard_Grey" />
+					<image id="Back" attachment="left|right" coordinates="26, 8, 188, 16" bitmap="TextBack DarkGrey Flat" scalable="true" />
+				</template>
+			</library>
+			<library id="Text and Value">
+				<library id="Embedded">
+					<template id="Textfield Black" coordinates="0, 0, 80, 35" aliasdecls="Value=text.value|Unit=text.unit|Label=label.text">
+						<text id="text" attachment="left|right" coordinates="2, 17, 76, 13" style="fit" font="Standard_W" horizontalalignment="center" />
+						<image id="Background" attachment="left|right" coordinates="0, 16, 80, 16" bitmap="TextBack Black" scalable="true" />
+						<label id="label" attachment="left|right" coordinates="0, 0, 80, 16" text="Label" font="HALion Label" horizontalalignment="center" />
+					</template>
+					<template id="Textfield DGrey" coordinates="0, 0, 80, 35" aliasdecls="Value=text.value|Unit=text.unit|Label=label.text">
+						<text id="text" attachment="left|right" coordinates="2, 17, 76, 13" style="fit" font="Standard_W" horizontalalignment="center" />
+						<image id="Background" attachment="left|right" coordinates="0, 16, 80, 16" bitmap="TextBack DarkGrey" scalable="true" />
+						<label id="label" attachment="left|right" coordinates="0, 0, 80, 16" text="Label" font="HALion Label" horizontalalignment="center" />
+					</template>
+					<template id="Textfield White" coordinates="0, 0, 80, 35" aliasdecls="Value=text.value|Unit=text.unit|Label=label.text">
+						<text id="text" attachment="left|right" coordinates="2, 17, 76, 13" style="fit" font="Standard_B" horizontalalignment="center" />
+						<image id="Background" attachment="left|right" coordinates="0, 16, 80, 16" bitmap="TextBack White" scalable="true" />
+						<label id="label" attachment="left|right" coordinates="0, 0, 80, 16" text="Label" font="HALion Label" horizontalalignment="center" />
+					</template>
+					<template id="ValueBox White" coordinates="0, 0, 81, 35" aliasdecls="Value=text.value|Value=switch inc.value|Value=switch dec.value|Unit=text.unit|Label=label.text">
+						<switch id="switch dec" attachment="right" coordinates="65, 24, 13, 7" bitmapOff="Sw_Value_Down_Dark_Off" bitmapOffDown="Sw_Value_Down_On" switchmode="decrement" />
+						<switch id="switch inc" attachment="right" coordinates="65, 18, 13, 7" bitmapOff="Sw_Value_Up_Dark_Off" bitmapOffDown="Sw_Value_Up_On" switchmode="increment" />
+						<text id="text" attachment="left|right" coordinates="2, 17, 62, 13" style="fit" font="Standard_B" horizontalalignment="center" />
+						<image id="Background" attachment="left|right" coordinates="0, 16, 80, 16" bitmap="TextBack White" scalable="true" />
+						<label id="label" attachment="left|right" coordinates="0, 0, 80, 16" text="Label" font="HALion Label" horizontalalignment="center" />
+					</template>
+				</library>
+				<library id="Flat">
+					<template id="Textfield Black Flat" coordinates="0, 0, 80, 36" aliasdecls="Value=text.value|Unit=text.unit|Label=label.text">
+						<text id="text" attachment="left|right" coordinates="2, 17, 76, 13" style="fit" font="Standard_W" horizontalalignment="center" />
+						<image id="Background" attachment="left|right" coordinates="0, 16, 80, 16" bitmap="TextBack Black Flat" scalable="true" />
+						<label id="label" attachment="left|right" coordinates="0, 0, 80, 16" text="Label" font="HALion Label" horizontalalignment="center" />
+					</template>
+				</library>
+			</library>
+			<template id="Aboutbox" coordinates="0, 0, 595, 390" scriptpath="vstsound://739012FE4E534E7C815788E220B4C4DA/.resources/scripts/AboutWebLinks.lua" scriptconnections="WebLink=">
+				<menu id="Weblinks" value="@WebLink" coordinates="205, 35, 180, 27" tooltip="Open Web Links" style="hover|scale" bitmaphover="Switch Page Off Hover" />
+				<switch id="Steinberg Website" value="@WebHome" coordinates="407, 311, 148, 40" tooltip="Open Steinberg Home Page" bitmapOffHover="Frame Round3 2p" switchmode="exclusive" style="hover|scalable" />
+				<switch id="Close switch" value="@Popup VIews" coordinates="24, 16, 550, 350" switchmode="exclusive" />
+				<label id="Person_4" coordinates="328, 186, 74, 17" text="John Sample" font="Standard_W" />
+				<label id="Person_3" coordinates="328, 171, 74, 17" text="G. Raymond" font="Standard_W" />
+				<label id="Person_2" coordinates="328, 156, 74, 17" text="John Doe" font="Standard_W" />
+				<label id="Person_1" coordinates="328, 141, 74, 17" text="Joe Bloggs" font="Standard_W" />
+				<label id="Person" coordinates="329, 126, 74, 17" text="John Smith" font="Standard_W" />
+				<label id="Role_4" coordinates="194, 190, 123, 17" text="QA:" font="Standard_Bold_W" />
+				<label id="Role_3" coordinates="194, 175, 123, 17" text="Preset Programming:" font="Standard_Bold_W" />
+				<label id="Role_2" coordinates="194, 158, 123, 17" text="Sample Production:" font="Standard_Bold_W" />
+				<label id="Role_1" coordinates="194, 142, 123, 17" text="GUI Design:" font="Standard_Bold_W" />
+				<label id="Role" coordinates="194, 126, 123, 17" text="Script Programming:" font="Standard_Bold_W" />
+				<image id="Background" coordinates="24, 16, 550, 350" bitmap="About Back" />
+			</template>
+			<library id="Doc">
+				<template id="Documentation" coordinates="0, 0, 595, 390" script="-- Web Link Confluence&#10;&#10;function onOpenWebLinkChanged()  &#10;  openURL(WebLink)&#10;end&#10;&#10;&#10;defineParameter(&quot;OpenWebLink&quot;, nil, true, onOpenWebLinkChanged)&#10;defineParameter(&quot;WebLink&quot;, nil, &quot;https://developer.steinberg.help&quot;)&#10;&#10;&#10;-- Web Link Steinberg Home Page&#10;&#10;function onOpenWebHomeChanged()  &#10;  openURL(&quot;http://www.steinberg.net/de/home.html&quot;)&#10;end&#10;&#10;&#10;defineParameter(&quot;OpenWebHome&quot;, nil, true, onOpenWebHomeChanged)&#10;" scriptconnections="WebLink=" aliasdecls="Titel=Titel.text|Sub Titel=Sub Titel.text|Type=Type.text|URL=Documentation.[WebLink]">
+					<image id="Logo" attachment="right" coordinates="447, 7, 141, 40" bitmap="Steinberg_Logo" />
+					<switch id="Steinberg Website" value="@OpenWebHome" attachment="right" coordinates="447, 7, 141, 40" tooltip="Open Steinberg Home Page" bitmapOffHover="Hover_Dark" bitmapOnHover="Hover_Dark" switchmode="onoff" style="hover|scalable" onvalue="1" />
+					<label id="Type" coordinates="14, 4, 190, 37" text="HALion - Doc Type -" font="HALion Doc Header" />
+					<switch id="Developer Help" value="@OpenWebLink" attachment="left|right" coordinates="7, 58, 582, 27" tooltip="Open Developer Help" bitmapOffHover="Hover_Light" bitmapOnHover="Hover_Light" switchmode="onoff" style="hover|scalable" />
+					<label id="Titel" attachment="left|right" coordinates="6, 58, 582, 26" text="- Titel -" font="HALion Doc Titel" horizontalalignment="center" />
+					<label id="Sub Titel" attachment="left|right" coordinates="6, 93, 582, 22" text="- Sub Titel -" font="HALion Doc SubTitel" horizontalalignment="center" />
+					<image id="Background" attachment="all" coordinates="0, 0, 595, 390" bitmap="Doc_Back" scalable="true" />
+				</template>
+			</library>
+			<template id="Logo Frame" coordinates="0, 0, 210, 138">
+				<image id="frame_bmp" attachment="all" coordinates="2, 0, 208, 138" bitmap="Frame" scalable="true" />
+				<image id="image" attachment="all" coordinates="5, 2, 201, 133" bitmap="LibraryLabel" scalable="true" />
+			</template>
+		</library>
+	</library>
+</skin>
