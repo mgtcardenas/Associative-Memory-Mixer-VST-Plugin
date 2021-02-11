@@ -73,14 +73,14 @@ function mix(midiSequenceA, midiSequenceB)
   --3.2 Create a table (array) full of zeroes (or -1s) with size (m x n) for each of the MIDI files…
   m = absolute_highest_note - absolute_lowest_note + 1 -- + 1 because 1-based Lua tables
   n = absolute_largest_ppqposition * magnification_factor + 1 -- + 1 in order to avoid incorrectly filling the z vectors (training vectors)
-  print("m = " .. m)
-  print("n = " .. n)
+  --  print("m = " .. m)
+  --  print("n = " .. n)
 
   -- 3.3 Establish the lower and upper difference limits
   lower_diff_limit = math.floor((m * n) * 0.05) -- %5 of the total size of the example arrays
   upper_diff_limit = math.floor((m * n) * 0.70) -- %70 of the total size of the example arrays
-  print("lower_diff_limit = " .. lower_diff_limit)
-  print("upper_diff_limit = " .. upper_diff_limit)
+  --  print("lower_diff_limit = " .. lower_diff_limit)
+  --  print("upper_diff_limit = " .. upper_diff_limit)
 
   --[[ 4. FILL ZA (VECTOR OF NOTES A) -- ]]
   za = get_table_full_of_minus_ones(m * n)
