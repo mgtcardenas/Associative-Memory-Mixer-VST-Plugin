@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <skin id="associative-memory-mixer-macro-page" rootpath="C:/Users/mgtca/Desktop/Code-Associative-Memory-Mixer" schemeversion="1">
 	<topgroup id="Macro Page" coordinates="0, 0, 595, 390" locksize="true">
-		<templateview id="PathBrowserB" coordinates="61, 144, 221, 31" template="PathBrowser" parameters="1#Value=@0:Lua Script/@par:pathB" />
-		<templateview id="PathBrowserA" coordinates="61, 64, 221, 31" template="PathBrowser" parameters="1#Value=@0:Lua Script/@par:pathA" />
+		<templateview id="Textfield Black" coordinates="26, 1, 542, 48" template="Textfield Black" aliases="Label=Associative Memory Mixer" />
+		<templateview id="label_1" coordinates="26, 143, 84, 20" template="Textfield Black Flat" aliases="Label=Path to MIDI B" />
+		<templateview id="label" coordinates="26, 63, 84, 20" template="Textfield Black Flat" aliases="Label=Path to MIDI A" />
+		<templateview id="silence_rate_knob_3" coordinates="409, 206, 112, 62" template="KnobH6Uni HoverVal" aliases="Label=Number of Attemps|Unit=Times|Value=@0:Lua Script/@par:num_attempts" />
+		<templateview id="silence_rate_knob_2" coordinates="262, 207, 112, 62" template="KnobH6Uni HoverVal" aliases="Label=Upper Diff. Percetange|Unit=Percentage|Value=@0:Lua Script/@par:upper_diff_percentage" />
+		<templateview id="silence_rate_knob_1" coordinates="125, 208, 112, 62" template="KnobH6Uni HoverVal" aliases="Label=Lower Diff. Percetange|Unit=Percentage|Value=@0:Lua Script/@par:lower_diff_percentage" />
+		<templateview id="silence_rate_knob" coordinates="27, 209, 70, 62" template="KnobH6Uni HoverVal" aliases="Value=@0:Lua Script/@par:silence_rate_percentage|Label=Silence Rate|Unit=Percentage" />
+		<templateview id="path_browser_b" coordinates="26, 162, 550, 31" template="PathBrowser" parameters="1#Value=@0:Lua Script/@par:pathB" />
+		<templateview id="path_browser_a" coordinates="26, 82, 550, 31" template="PathBrowser" parameters="1#Value=@0:Lua Script/@par:pathA" />
 		<image id="Back" coordinates="0, 0, 595, 390" bitmap="Background" />
 	</topgroup>
 	<resources id="resources">
@@ -64,6 +71,15 @@
 				<section id="Hover_Light" bitmap="Doc_Parts" coordinates="16, 16, 80, 32" />
 				<bitmap id="Doc_Back" path="vstsound://739012FE4E534E7C815788E220B4C4DA/.resources/macropages/resources/Doc/Doc_Back.png" margins="12, 100, 12, 20" />
 			</resources>
+			<resources id="Slider">
+				<resources id="Horizontal">
+					<section id="RangeSliderHandle H" bitmap="Basic Controls Bitmap" coordinates="8, 205, 114, 17" margins="4, 4, 4, 4" />
+					<section id="SliderBack H" bitmap="Basic Controls Bitmap" coordinates="5, 280, 120, 23" margins="3, 4, 3, 4" />
+				</resources>
+			</resources>
+			<resources id="Knobs">
+				<bitmap id="Knob_H6_uni" path="vstsound://739012FE4E534E7C815788E220B4C4DA/.resources/macropages/resources/Knobs/Knob_H6_uni.png" frames="65" />
+			</resources>
 		</resources>
 	</resources>
 	<library id="library">
@@ -78,10 +94,8 @@
 			</library>
 			<library id="Text and Value">
 				<library id="Embedded">
-					<template id="Textfield Black" coordinates="0, 0, 80, 35" aliasdecls="Value=text.value|Unit=text.unit|Label=label.text">
-						<text id="text" attachment="left|right" coordinates="2, 17, 76, 13" style="fit" font="Standard_W" horizontalalignment="center" />
-						<image id="Background" attachment="left|right" coordinates="0, 16, 80, 16" bitmap="TextBack Black" scalable="true" />
-						<label id="label" attachment="left|right" coordinates="0, 0, 80, 16" text="Label" font="HALion Label" horizontalalignment="center" />
+					<template id="Textfield Black" coordinates="0, 0, 98, 45" aliasdecls="Value=text.value|Unit=text.unit|Label=label.text">
+						<label id="label" attachment="left|right" coordinates="0, 0, 98, 45" text="Label" font="HALion Doc Header" />
 					</template>
 					<template id="Textfield DGrey" coordinates="0, 0, 80, 35" aliasdecls="Value=text.value|Unit=text.unit|Label=label.text">
 						<text id="text" attachment="left|right" coordinates="2, 17, 76, 13" style="fit" font="Standard_W" horizontalalignment="center" />
@@ -102,10 +116,8 @@
 					</template>
 				</library>
 				<library id="Flat">
-					<template id="Textfield Black Flat" coordinates="0, 0, 80, 36" aliasdecls="Value=text.value|Unit=text.unit|Label=label.text">
-						<text id="text" attachment="left|right" coordinates="2, 17, 76, 13" style="fit" font="Standard_W" horizontalalignment="center" />
-						<image id="Background" attachment="left|right" coordinates="0, 16, 80, 16" bitmap="TextBack Black Flat" scalable="true" />
-						<label id="label" attachment="left|right" coordinates="0, 0, 80, 16" text="Label" font="HALion Label" horizontalalignment="center" />
+					<template id="Textfield Black Flat" coordinates="0, 0, 85, 18" aliasdecls="Value=text.value|Unit=text.unit|Label=label.text">
+						<label id="label" attachment="left|right" coordinates="3, 1, 78, 16" text="Silence Rate" font="Standard_Bold_W" horizontalalignment="center" />
 					</template>
 				</library>
 			</library>
@@ -140,6 +152,25 @@
 				<image id="frame_bmp" attachment="all" coordinates="2, 0, 208, 138" bitmap="Frame" scalable="true" />
 				<image id="image" attachment="all" coordinates="5, 2, 201, 133" bitmap="LibraryLabel" scalable="true" />
 			</template>
+			<library id="Slider">
+				<template id="RangeSlider H" coordinates="0, 0, 200, 18" aliasdecls="LowValue=Slider.value|HighValue=Slider.uppervalue">
+					<rangeslider id="Slider" attachment="all" coordinates="2, 2, 196, 14" handle="RangeSliderHandle H" />
+					<image id="Back" attachment="all" coordinates="0, 0, 200, 18" bitmap="SliderBack H" scalable="true" />
+				</template>
+			</library>
+			<library id="Knobs">
+				<template id="KnobH6Uni HoverVal" coordinates="10, 10, 40, 56" aliasdecls="Value=knob.value|Value=text.value|Label=label.text|Unit=text.unit">
+					<variables id="Variables">
+						<integer id="hov" />
+					</variables>
+					<stack id="stack" attachment="left|right" coordinates="0, 38, 40, 18" value="@hov">
+						<label id="label" attachment="left|right" coordinates="0, 0, 40, 18" font="HALion Label" horizontalalignment="center" />
+						<text id="text" attachment="left|right" coordinates="0, 0, 40, 18" font="HALion Label" horizontalalignment="center" />
+					</stack>
+					<knob id="knob" attachment="left|right" attachratios="1/2, 0/1, 1/2, 1/1" bitmap="Knob_H6_uni" style="shaped" />
+					<switch id="switch" value="@hov" attachment="left|right" coordinates="0, 0, 40, 56" attachratios="1/2, 0/1, 1/2, 1/1" switchmode="hover" style="scalable" />
+				</template>
+			</library>
 		</library>
 	</library>
 </skin>
