@@ -1,12 +1,12 @@
 require('utils')
 
-function mix(midiSequenceA, midiSequenceB, silence_rate, lower_diff_percentage, upper_diff_percentage, num_attempts)
+function mix(midi_sequence_a, midi_sequenc_b, result_path, silence_rate, lower_diff_percentage, upper_diff_percentage, num_attempts)
   -- 0. ESTABLISH CONSTANTS
   magnification_factor = 1
   p = 2 -- p is the number of patterns
 
   -- 1.2 Sort its events (to ensure that the following steps will work correctly)
-  sortEvents(midiSequenceA.tracks[1].events)
+  sortEvents(midi_sequence_a.tracks[1].events)
 
   --[[ 1.3 Loop through the NoteOffEvents and keep track of …
     a. The lowest note
@@ -17,7 +17,7 @@ function mix(midiSequenceA, midiSequenceB, silence_rate, lower_diff_percentage, 
   midi_a_highest_note = -math.huge
   midi_a_largest_ppqposition = -math.huge -- math.huge = infinite. It is possible to do -math.huge to get minus infinite
 
-  for i, event in ipairs(midiSequenceA.tracks[1].events) do
+  for i, event in ipairs(midi_sequence_a.tracks[1].events) do
     if event.type == EventType.noteOff then
       if event.note < midi_a_lowest_note then midi_a_lowest_note = event.note end
       if event.note > midi_a_highest_note then midi_a_highest_note = event.note end
@@ -34,7 +34,7 @@ function mix(midiSequenceA, midiSequenceB, silence_rate, lower_diff_percentage, 
   -- 2.1 Read the MIDI file B (obtain the array of events)
 
   -- 2.2 Sort its events (to ensure that the following steps will work correctly)
-  sortEvents(midiSequenceB.tracks[1].events)
+  sortEvents(midi_sequenc_b.tracks[1].events)
 
   --[[ 2.3 Loop through the NoteOffEvents and keep track of …
     a. The lowest note
@@ -45,7 +45,7 @@ function mix(midiSequenceA, midiSequenceB, silence_rate, lower_diff_percentage, 
   midi_b_highest_note = -math.huge
   midi_b_largest_ppqposition = -math.huge -- math.huge = infinite. It is possible to do -math.huge to get minus infinite
 
-  for i, event in ipairs(midiSequenceB.tracks[1].events) do
+  for i, event in ipairs(midi_sequenc_b.tracks[1].events) do
     if event.type == EventType.noteOff then
       if event.note < midi_b_lowest_note then midi_b_lowest_note = event.note end
       if event.note > midi_b_highest_note then midi_b_highest_note = event.note end
@@ -88,7 +88,7 @@ function mix(midiSequenceA, midiSequenceB, silence_rate, lower_diff_percentage, 
 
   -- 4.1 Iterate through all the NoteOnEvents.
   -- 4.1.a. For every NoteOnEvent, search starting from the index of the just found NoteOnEvent looking for the closest NoteOffEvent that corresponds to the same MIDI Note Value.
-  eventsA = midiSequenceA.tracks[1].events
+  eventsA = midi_sequence_a.tracks[1].events
   for i = 1, #eventsA, 1 do
     if eventsA[i].type == EventType.noteOn then
       for j = i + 1, #eventsA, 1 do
@@ -115,7 +115,7 @@ function mix(midiSequenceA, midiSequenceB, silence_rate, lower_diff_percentage, 
   zb = get_table_full_of_minus_ones(m * n)
   -- 5.1 Iterate through all the NoteOnEvents.
   -- 5.1.a. For every NoteOnEvent, search starting from the index of the just found NoteOnEvent looking for the closest NoteOffEvent that corresponds to the same MIDI Note Value.
-  eventsB = midiSequenceB.tracks[1].events
+  eventsB = midi_sequenc_b.tracks[1].events
   for i = 1, #eventsB, 1 do
     if eventsB[i].type == EventType.noteOn then
       for j = i + 1, #eventsB, 1 do
@@ -213,5 +213,5 @@ function mix(midiSequenceA, midiSequenceB, silence_rate, lower_diff_percentage, 
   -- 9.3 sort the events to avoid incoherently writing the MIDI file
   sortEvents(midiSequence.tracks[1].events)
   -- 9.4 write the result in a MIDI file
-  saveState = writeMidiFile("c:/temp/c.mid", midiSequence)
+  saveState = writeMidiFile(result_path, midiSequence)
 end

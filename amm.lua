@@ -1,16 +1,23 @@
 require('mix')
 
-function pathAChanged()
-  print("pathA changed to", pathA)
+
+function path_a_changed()
+  print("pathA changed to", path_a)
 end
 
-defineParameter("pathA", nil, "untitledA", pathAChanged)
+defineParameter("path_a", nil, "untitled_a", path_a_changed)
 
-function pathBChanged()
-  print("pathB changed to", pathB)
+function path_b_changed()
+  print("pathB changed to", path_b)
 end
 
-defineParameter("pathB", nil, "untitledB", pathBChanged)
+defineParameter("path_b", nil, "untitled_b", path_b_changed)
+
+function result_path_changed()
+  print("result_path changed to", result_path)
+end
+
+defineParameter("result_path", nil, "untitled_result", result_path_changed)
 
 defineParameter("silence_rate_percentage", nil, 0, 0.0, 1.0, 0.1) -- Silence Rate: how probable it is that a note in the matrix (piano roll representation) will be a silence
 defineParameter("lower_diff_percentage", nil, 0, 0.0, 1.0, 0.01) -- bipolar parameter from 0.0 to 1.0 with 0.01 steps
@@ -18,11 +25,11 @@ defineParameter("upper_diff_percentage", nil, 0, 0.0, 1.0, 0.01) -- bipolar para
 defineParameter("num_attempts", nil, 0, 1, 5, 1) -- bipolar parameter from 0 to 5 with steps of 1
 
 function onNote(event)
-  runAsync(run, pathA, pathB, silence_rate_percentage, lower_diff_percentage, upper_diff_percentage, num_attempts)
+  runAsync(run, path_a, path_b, result_path, silence_rate_percentage, lower_diff_percentage, upper_diff_percentage, num_attempts)
 end
 
-function run(pathA, pathB, silence_rate_percentage, lower_diff_percentage, upper_diff_percentage, num_attempts)
-  midiSequenceA = readMidiFile(pathA)
-  midiSequenceB = readMidiFile(pathB)
-  mix(midiSequenceA, midiSequenceB, silence_rate_percentage, lower_diff_percentage, upper_diff_percentage, num_attempts)
+function run(path_a, path_b, result_path, silence_rate_percentage, lower_diff_percentage, upper_diff_percentage, num_attempts)
+  midiSequenceA = readMidiFile(path_a)
+  midiSequenceB = readMidiFile(path_b)
+  mix(midiSequenceA, midiSequenceB, result_path, silence_rate_percentage, lower_diff_percentage, upper_diff_percentage, num_attempts)
 end

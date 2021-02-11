@@ -2,14 +2,16 @@
 <skin id="associative-memory-mixer-macro-page" rootpath="C:/Users/mgtca/Desktop/Code-Associative-Memory-Mixer" schemeversion="1">
 	<topgroup id="Macro Page" coordinates="0, 0, 595, 390" locksize="true">
 		<templateview id="Textfield Black" coordinates="26, 1, 542, 48" template="Textfield Black" aliases="Label=Associative Memory Mixer" />
+		<templateview id="label_2" coordinates="27, 216, 84, 20" template="Textfield Black Flat" aliases="Label=Result Path" />
+		<templateview id="path_browser_b_1" coordinates="26, 239, 550, 31" template="PathBrowser" parameters="1#Value=@0:Lua Script/@par:result_path|3#Extension=mid|4#Title=Select MIDI to Write Result" />
 		<templateview id="label_1" coordinates="26, 143, 84, 20" template="Textfield Black Flat" aliases="Label=Path to MIDI B" />
 		<templateview id="label" coordinates="26, 63, 84, 20" template="Textfield Black Flat" aliases="Label=Path to MIDI A" />
-		<templateview id="silence_rate_knob_3" coordinates="409, 206, 112, 62" template="KnobH6Uni HoverVal" aliases="Label=Number of Attemps|Unit=Times|Value=@0:Lua Script/@par:num_attempts" />
-		<templateview id="silence_rate_knob_2" coordinates="262, 207, 112, 62" template="KnobH6Uni HoverVal" aliases="Label=Upper Diff. Percetange|Unit=Percentage|Value=@0:Lua Script/@par:upper_diff_percentage" />
-		<templateview id="silence_rate_knob_1" coordinates="125, 208, 112, 62" template="KnobH6Uni HoverVal" aliases="Label=Lower Diff. Percetange|Unit=Percentage|Value=@0:Lua Script/@par:lower_diff_percentage" />
-		<templateview id="silence_rate_knob" coordinates="27, 209, 70, 62" template="KnobH6Uni HoverVal" aliases="Value=@0:Lua Script/@par:silence_rate_percentage|Label=Silence Rate|Unit=Percentage" />
-		<templateview id="path_browser_b" coordinates="26, 162, 550, 31" template="PathBrowser" parameters="1#Value=@0:Lua Script/@par:pathB" />
-		<templateview id="path_browser_a" coordinates="26, 82, 550, 31" template="PathBrowser" parameters="1#Value=@0:Lua Script/@par:pathA" />
+		<templateview id="silence_rate_knob_3" coordinates="415, 296, 112, 62" template="KnobH6Uni HoverVal" aliases="Label=Number of Attemps|Unit=Times|Value=@0:Lua Script/@par:num_attempts" />
+		<templateview id="silence_rate_knob_2" coordinates="268, 297, 112, 62" template="KnobH6Uni HoverVal" aliases="Label=Upper Diff. Percetange|Unit=Percentage|Value=@0:Lua Script/@par:upper_diff_percentage" />
+		<templateview id="silence_rate_knob_1" coordinates="131, 298, 112, 62" template="KnobH6Uni HoverVal" aliases="Label=Lower Diff. Percetange|Unit=Percentage|Value=@0:Lua Script/@par:lower_diff_percentage" />
+		<templateview id="silence_rate_knob" coordinates="33, 299, 70, 62" template="KnobH6Uni HoverVal" aliases="Value=@0:Lua Script/@par:silence_rate_percentage|Label=Silence Rate|Unit=Percentage" />
+		<templateview id="path_browser_b" coordinates="26, 162, 550, 31" template="PathBrowser" parameters="1#Value=@0:Lua Script/@par:path_b|3#Extension=mid|4#Title=Select MIDI File B" />
+		<templateview id="path_browser_a" coordinates="26, 82, 550, 31" template="PathBrowser" parameters="1#Value=@0:Lua Script/@par:path_a|3#Extension=mid|4#Title=Select MIDI File A" />
 		<image id="Back" coordinates="0, 0, 595, 390" bitmap="Background" />
 	</topgroup>
 	<resources id="resources">
@@ -117,7 +119,7 @@
 				</library>
 				<library id="Flat">
 					<template id="Textfield Black Flat" coordinates="0, 0, 85, 18" aliasdecls="Value=text.value|Unit=text.unit|Label=label.text">
-						<label id="label" attachment="left|right" coordinates="3, 1, 78, 16" text="Silence Rate" font="Standard_Bold_W" horizontalalignment="center" />
+						<label id="label" attachment="left|right" coordinates="3, 1, 78, 16" text="Silence Rate" font="Standard_Bold_W" />
 					</template>
 				</library>
 			</library>
