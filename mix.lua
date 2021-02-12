@@ -1,5 +1,29 @@
 require('utils')
 
+
+function fill_z_vector(events, z_vector)
+  for i = 1, #events, 1 do
+    if events[i].type == EventType.noteOn then
+      for j = i + 1, #events, 1 do
+        if events[j].type == EventType.noteOff and events[i].note == events[j].note then -- AND EVENTSA[J].PPQPOSITION <= 8
+          -- 4.1.b. Fill with 1s the row from j1 to j2 (where j2 >= j1 and j1 & j2 are column indices) using the following parameters.
+          i1 = absolute_highest_note - events[i].note + 1 -- the row in the piano roll representation matrix
+          j1 = math.floor(events[i].ppqPosition * magnification_factor + 0.5) + 1 -- the start column in the piano roll representation matrix; + 0.5 is to make math.floor equivalent to math.round
+          j2 = math.floor(events[j].ppqPosition * magnification_factor + 0.5) + 1 -- the end column in the piano roll representation matrix; + 0.5 is to make math.floor equivalent to math.round
+          xi = (i1 - 1) * n + (j1 - 1) + 1
+          xj = (i1 - 1) * n + (j2 - 1) + 1
+          -- print(i1, j1, j2, events[i], events[j], xi, xj)
+          for z = xi, xj, 1 do
+            z_vector[z] = 1
+          end -- for - z
+          break -- just find the closest noteOff event
+        end -- if
+      end -- for - j
+    end -- if
+  end -- for - i
+end
+
+
 function mix(midi_sequence_a, midi_sequenc_b, result_path, silence_rate, lower_diff_percentage, upper_diff_percentage, num_attempts)
   -- 0. ESTABLISH CONSTANTS
   magnification_factor = 1
@@ -18,7 +42,7 @@ function mix(midi_sequence_a, midi_sequenc_b, result_path, silence_rate, lower_d
   midi_a_largest_ppqposition = -math.huge -- math.huge = infinite. It is possible to do -math.huge to get minus infinite
 
   for i, event in ipairs(midi_sequence_a.tracks[1].events) do
-    if event.type == EventType.noteOff then
+    if event.type == EventType.noteOff then -- AND EVENT.PPQpOSITION <= 8
       if event.note < midi_a_lowest_note then midi_a_lowest_note = event.note end
       if event.note > midi_a_highest_note then midi_a_highest_note = event.note end
       if event.ppqPosition > midi_a_largest_ppqposition then midi_a_largest_ppqposition = event.ppqPosition end
@@ -46,7 +70,7 @@ function mix(midi_sequence_a, midi_sequenc_b, result_path, silence_rate, lower_d
   midi_b_largest_ppqposition = -math.huge -- math.huge = infinite. It is possible to do -math.huge to get minus infinite
 
   for i, event in ipairs(midi_sequenc_b.tracks[1].events) do
-    if event.type == EventType.noteOff then
+    if event.type == EventType.noteOff then -- AND EVENT.PPQpOSITION <= 8
       if event.note < midi_b_lowest_note then midi_b_lowest_note = event.note end
       if event.note > midi_b_highest_note then midi_b_highest_note = event.note end
       if event.ppqPosition > midi_b_largest_ppqposition then midi_b_largest_ppqposition = event.ppqPosition end
@@ -89,52 +113,14 @@ function mix(midi_sequence_a, midi_sequenc_b, result_path, silence_rate, lower_d
   -- 4.1 Iterate through all the NoteOnEvents.
   -- 4.1.a. For every NoteOnEvent, search starting from the index of the just found NoteOnEvent looking for the closest NoteOffEvent that corresponds to the same MIDI Note Value.
   eventsA = midi_sequence_a.tracks[1].events
-  for i = 1, #eventsA, 1 do
-    if eventsA[i].type == EventType.noteOn then
-      for j = i + 1, #eventsA, 1 do
-        if eventsA[j].type == EventType.noteOff and eventsA[i].note == eventsA[j].note then
-          -- 4.1.b. Fill with 1s the row from j1 to j2 (where j2 >= j1 and j1 & j2 are column indices) using the following parameters.
-          i1 = absolute_highest_note - eventsA[i].note + 1 -- the row in the piano roll representation matrix
-          j1 = math.floor(eventsA[i].ppqPosition * magnification_factor + 0.5) + 1 -- the start column in the piano roll representation matrix; + 0.5 is to make math.floor equivalent to math.round
-          j2 = math.floor(eventsA[j].ppqPosition * magnification_factor + 0.5) + 1 -- the end column in the piano roll representation matrix; + 0.5 is to make math.floor equivalent to math.round
-          xi = (i1 - 1) * n + (j1 - 1) + 1
-          xj = (i1 - 1) * n + (j2 - 1) + 1
-          -- print(i1, j1, j2, eventsA[i], eventsA[j], xi, xj)
-          for z = xi, xj, 1 do
-            za[z] = 1
-          end -- for - z
-          break -- just find the closest noteOff event
-        end -- if
-      end -- for - j
-    end -- if
-  end -- for - i
+  fill_z_vector(eventsA, za)
 
-  -- print()
-
-  --[[ 5. FILL ZB (VECTOR OF NOTES A) -- ]]
+  --[[ 5. FILL ZB (VECTOR OF NOTES B) -- ]]
   zb = get_table_full_of_minus_ones(m * n)
   -- 5.1 Iterate through all the NoteOnEvents.
   -- 5.1.a. For every NoteOnEvent, search starting from the index of the just found NoteOnEvent looking for the closest NoteOffEvent that corresponds to the same MIDI Note Value.
   eventsB = midi_sequenc_b.tracks[1].events
-  for i = 1, #eventsB, 1 do
-    if eventsB[i].type == EventType.noteOn then
-      for j = i + 1, #eventsB, 1 do
-        if eventsB[j].type == EventType.noteOff and eventsB[i].note == eventsB[j].note then
-          -- 5.1.b. Fill with 1s the row from j1 to j2 (where j2 >= j1 and j1 & j2 are column indices) using the following parameters.
-          i1 = absolute_highest_note - eventsB[i].note + 1 -- the row in the piano roll representation matrix
-          j1 = math.floor(eventsB[i].ppqPosition * magnification_factor + 0.5) + 1 -- the start column in the piano roll representation matrix; + 0.5 is to make math.floor equivalent to math.round
-          j2 = math.floor(eventsB[j].ppqPosition * magnification_factor + 0.5) + 1 -- the end column in the piano roll representation matrix; + 0.5 is to make math.floor equivalent to math.round
-          xi = (i1 - 1) * n + (j1 - 1) + 1
-          xj = (i1 - 1) * n + (j2 - 1) + 1
-          -- print(i1, j1, j2, eventsB[i], eventsB[j], xi, xj)
-          for z = xi, xj, 1 do
-            zb[z] = 1
-          end -- for - z
-          break -- just find the closest noteOff event
-        end -- if
-      end -- for - j
-    end -- if
-  end -- for - i
+  fill_z_vector(eventsB, zb)
 
   --[[ 6. OBTAIN ii --]]
   ii = matrix_scalar_dot_product(get_identity_matrix(m * n), p / (m * n))

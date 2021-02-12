@@ -24,6 +24,11 @@ defineParameter("lower_diff_percentage", nil, 0, 0.0, 1.0, 0.01) -- bipolar para
 defineParameter("upper_diff_percentage", nil, 0, 0.0, 1.0, 0.01) -- bipolar parameter from 0.0 to 1.0 with 0.01 steps
 defineParameter("num_attempts", nil, 0, 1, 5, 1) -- bipolar parameter from 0 to 5 with steps of 1
 
+silence_rate_percentage = 0.7
+lower_diff_percentage = 0.05
+upper_diff_percentage = 0.7
+num_attempts = 5
+
 function onNote(event)
   runAsync(run, path_a, path_b, result_path, silence_rate_percentage, lower_diff_percentage, upper_diff_percentage, num_attempts)
 end
