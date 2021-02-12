@@ -5,7 +5,7 @@ function fill_z_vector(events, z_vector)
   for i = 1, #events, 1 do
     if events[i].type == EventType.noteOn then
       for j = i + 1, #events, 1 do
-        if events[j].type == EventType.noteOff and events[i].note == events[j].note then -- AND EVENTSA[J].PPQPOSITION <= 8
+        if events[j].type == EventType.noteOff and events[j].ppqPosition <= 8 and events[i].note == events[j].note then
           -- 4.1.b. Fill with 1s the row from j1 to j2 (where j2 >= j1 and j1 & j2 are column indices) using the following parameters.
           i1 = absolute_highest_note - events[i].note + 1 -- the row in the piano roll representation matrix
           j1 = math.floor(events[i].ppqPosition * magnification_factor + 0.5) + 1 -- the start column in the piano roll representation matrix; + 0.5 is to make math.floor equivalent to math.round
@@ -42,7 +42,7 @@ function mix(midi_sequence_a, midi_sequenc_b, result_path, silence_rate, lower_d
   midi_a_largest_ppqposition = -math.huge -- math.huge = infinite. It is possible to do -math.huge to get minus infinite
 
   for i, event in ipairs(midi_sequence_a.tracks[1].events) do
-    if event.type == EventType.noteOff then -- AND EVENT.PPQpOSITION <= 8
+    if event.type == EventType.noteOff and event.ppqPosition <= 8 then
       if event.note < midi_a_lowest_note then midi_a_lowest_note = event.note end
       if event.note > midi_a_highest_note then midi_a_highest_note = event.note end
       if event.ppqPosition > midi_a_largest_ppqposition then midi_a_largest_ppqposition = event.ppqPosition end
@@ -70,7 +70,7 @@ function mix(midi_sequence_a, midi_sequenc_b, result_path, silence_rate, lower_d
   midi_b_largest_ppqposition = -math.huge -- math.huge = infinite. It is possible to do -math.huge to get minus infinite
 
   for i, event in ipairs(midi_sequenc_b.tracks[1].events) do
-    if event.type == EventType.noteOff then -- AND EVENT.PPQpOSITION <= 8
+    if event.type == EventType.noteOff and event.ppqPosition <= 8 then
       if event.note < midi_b_lowest_note then midi_b_lowest_note = event.note end
       if event.note > midi_b_highest_note then midi_b_highest_note = event.note end
       if event.ppqPosition > midi_b_largest_ppqposition then midi_b_largest_ppqposition = event.ppqPosition end
