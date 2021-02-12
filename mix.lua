@@ -24,7 +24,7 @@ function fill_z_vector(events, z_vector)
 end
 
 
-function mix(midi_sequence_a, midi_sequenc_b, result_path, silence_rate, lower_diff_percentage, upper_diff_percentage, num_attempts)
+function mix(midi_sequence_a, midi_sequenc_b, silence_rate, lower_diff_percentage, upper_diff_percentage, num_attempts)
   -- 0. ESTABLISH CONSTANTS
   magnification_factor = 1
   p = 2 -- p is the number of patterns
@@ -199,5 +199,5 @@ function mix(midi_sequence_a, midi_sequenc_b, result_path, silence_rate, lower_d
   -- 9.3 sort the events to avoid incoherently writing the MIDI file
   sortEvents(midiSequence.tracks[1].events)
   -- 9.4 write the result in a MIDI file
-  saveState = writeMidiFile(result_path, midiSequence)
+  saveState = writeMidiFile("C:/temp/result.mid", midiSequence)
 end
