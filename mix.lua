@@ -1,11 +1,11 @@
 require('utils')
 
 
-function fill_z_vector(events, z_vector)
+function fill_z_vector(events, z_vector, ppq_position_limit)
   for i = 1, #events, 1 do
     if events[i].type == EventType.noteOn then
       for j = i + 1, #events, 1 do
-        if events[j].type == EventType.noteOff and events[j].ppqPosition <= 8 and events[i].note == events[j].note then
+        if events[j].type == EventType.noteOff and events[j].ppqPosition <= ppq_position_limit and events[i].note == events[j].note then
           -- 4.1.b. Fill with 1s the row from j1 to j2 (where j2 >= j1 and j1 & j2 are column indices) using the following parameters.
           i1 = absolute_highest_note - events[i].note + 1 -- the row in the piano roll representation matrix
           j1 = math.floor(events[i].ppqPosition * magnification_factor + 0.5) + 1 -- the start column in the piano roll representation matrix; + 0.5 is to make math.floor equivalent to math.round
@@ -19,12 +19,15 @@ function fill_z_vector(events, z_vector)
           break -- just find the closest noteOff event
         end -- if
       end -- for - j
+    elseif events[i].type == EventType.noteOff and events[i].ppqPosition > ppq_position_limit then
+      print(events[i])
+      break -- just get out of the function, you're done
     end -- if
   end -- for - i
 end
 
 
-function mix(midi_sequence_a, midi_sequenc_b, silence_rate, lower_diff_percentage, upper_diff_percentage, num_attempts)
+function mix(midi_sequence_a, midi_sequenc_b, result_path, silence_rate, lower_diff_percentage, upper_diff_percentage, num_attempts, ppq_position_limit)
   -- 0. ESTABLISH CONSTANTS
   magnification_factor = 1
   p = 2 -- p is the number of patterns
@@ -42,11 +45,13 @@ function mix(midi_sequence_a, midi_sequenc_b, silence_rate, lower_diff_percentag
   midi_a_largest_ppqposition = -math.huge -- math.huge = infinite. It is possible to do -math.huge to get minus infinite
 
   for i, event in ipairs(midi_sequence_a.tracks[1].events) do
-    if event.type == EventType.noteOff and event.ppqPosition <= 8 then
+    if event.type == EventType.noteOff and event.ppqPosition <= ppq_position_limit then
       if event.note < midi_a_lowest_note then midi_a_lowest_note = event.note end
       if event.note > midi_a_highest_note then midi_a_highest_note = event.note end
       if event.ppqPosition > midi_a_largest_ppqposition then midi_a_largest_ppqposition = event.ppqPosition end
       -- print(i, event)
+    elseif event.type == EventType.noteOff and event.ppqPosition > ppq_position_limit then
+      break
     end -- if
   end -- for
 
@@ -70,11 +75,13 @@ function mix(midi_sequence_a, midi_sequenc_b, silence_rate, lower_diff_percentag
   midi_b_largest_ppqposition = -math.huge -- math.huge = infinite. It is possible to do -math.huge to get minus infinite
 
   for i, event in ipairs(midi_sequenc_b.tracks[1].events) do
-    if event.type == EventType.noteOff and event.ppqPosition <= 8 then
+    if event.type == EventType.noteOff and event.ppqPosition <= ppq_position_limit then
       if event.note < midi_b_lowest_note then midi_b_lowest_note = event.note end
       if event.note > midi_b_highest_note then midi_b_highest_note = event.note end
       if event.ppqPosition > midi_b_largest_ppqposition then midi_b_largest_ppqposition = event.ppqPosition end
       -- print(i, event)
+    elseif event.type == EventType.noteOff and event.ppqPosition > ppq_position_limit then
+      break
     end -- if
   end -- for
 
@@ -82,7 +89,7 @@ function mix(midi_sequence_a, midi_sequenc_b, silence_rate, lower_diff_percentag
   --  print("The highest note in midi b is: " .. midi_b_highest_note)
   --  print("The largest ppqposition in midi b is: " .. midi_b_largest_ppqposition)
 
-  --[[ 3. PREPARE Z VECTORS -- ]]
+  --[[ 3. PREPARE for Z VECTORS -- ]]
   -- 3.1 Obtain the following variables
   absolute_lowest_note = math.min(midi_a_lowest_note, midi_b_lowest_note)
   absolute_highest_note = math.max(midi_a_highest_note, midi_b_highest_note)
@@ -99,7 +106,7 @@ function mix(midi_sequence_a, midi_sequenc_b, silence_rate, lower_diff_percentag
   --  print("m = " .. m)
   --  print("n = " .. n)
 
-  -- 3.3 Establish the lower and upper difference limits
+  -- 3.3 Establish the limits for the acceptable number of notes
   lower_diff_limit = math.floor((m * n) * lower_diff_percentage)
   upper_diff_limit = math.floor((m * n) * upper_diff_percentage)
   --  print("lower_diff_limit = " .. lower_diff_limit)
@@ -113,14 +120,14 @@ function mix(midi_sequence_a, midi_sequenc_b, silence_rate, lower_diff_percentag
   -- 4.1 Iterate through all the NoteOnEvents.
   -- 4.1.a. For every NoteOnEvent, search starting from the index of the just found NoteOnEvent looking for the closest NoteOffEvent that corresponds to the same MIDI Note Value.
   eventsA = midi_sequence_a.tracks[1].events
-  fill_z_vector(eventsA, za)
+  fill_z_vector(eventsA, za, ppq_position_limit)
 
   --[[ 5. FILL ZB (VECTOR OF NOTES B) -- ]]
   zb = get_table_full_of_minus_ones(m * n)
   -- 5.1 Iterate through all the NoteOnEvents.
   -- 5.1.a. For every NoteOnEvent, search starting from the index of the just found NoteOnEvent looking for the closest NoteOffEvent that corresponds to the same MIDI Note Value.
   eventsB = midi_sequenc_b.tracks[1].events
-  fill_z_vector(eventsB, zb)
+  fill_z_vector(eventsB, zb, ppq_position_limit)
 
   --[[ 6. OBTAIN ii --]]
   ii = matrix_scalar_dot_product(get_identity_matrix(m * n), p / (m * n))
@@ -155,35 +162,36 @@ function mix(midi_sequence_a, midi_sequenc_b, silence_rate, lower_diff_percentag
   end -- while
 
   --[[ 9. TRANSFORM VARIATION RESULT INTO MIDI FILE --]]
-  -- 9.1 create MIDI sequence table
+  -- 9.1 Create a new MIDI sequence table
   midiSequence = { tracks = { { events = {} } } }
 
-  -- 9.2 loop through the resulting vector
+  -- 9.2 Loop through the result vector from the previous step.
   x = 1
   while (x <= #result) do
-    -- 9.2.1 when you encounter a 1...
+    -- When encountering a 1...
     if (result[x] == 1) then
-      -- transform vector index to matrix indices (using 1-based array arithmetic)…
+      -- Transform vector index to matrix indices (using 1-based array arithmetic)
+      -- This gives the matrix indices i and j from vector index x.
       i = math.ceil(x / n)
       j = (x - 1) % n + 1
 
-      -- add a noteOn event on note 'absolute_highest_note' - (i - 1) and ppqPosition j...
+      -- Add a NoteOn event witch pitch equal to absolute_highest_note - (i - 1) on PPQPosition j
       local noteOn = Event(EventType.noteOn)
       noteOn.note = absolute_highest_note - (i - 1)
       noteOn.velocity = 100
       noteOn.ppqPosition = j / magnification_factor
 
-      -- skip until we find a -1 or we get to the end of the matrix
+      -- Loop and skip until a -1 is found or it is the last column of matrix
       while (result[x] == 1 and x % n ~= 0) do
         x = x + 1
       end
 
-      -- add a noteOff event on note 'absolute_highest_note' - (i - 1) and a special ppqPosition...
+      -- Add a NoteOff event with pitch equal to absolute_highest_note - (i - 1) on the following PPQPosition
       local noteOff = Event(EventType.noteOff)
       noteOff.note = absolute_highest_note - (i - 1)
       noteOff.velocity = 100
-      -- if there is a note in the last position, put the noteOff event one ppqPosition after (n + 1)
-      -- else just use the column position
+      -- If there is a note in the last position/column, put the NoteOff event one PPQPosition after it (n + 1)
+      -- Else just use the column position
       noteOff.ppqPosition = (x % n == 0 and n + 1 or x % n) / magnification_factor
 
       -- print("i=" .. i .. " j=" .. j .. " thus note is " .. noteOn.note .. " note off is in =" .. (x % n == 0 and n + 1 or x % n))
@@ -196,8 +204,8 @@ function mix(midi_sequence_a, midi_sequenc_b, silence_rate, lower_diff_percentag
     x = x + 1
   end -- while
 
-  -- 9.3 sort the events to avoid incoherently writing the MIDI file
+  -- 9.3 Sort the events to avoid incoherently writing the MIDI file
   sortEvents(midiSequence.tracks[1].events)
-  -- 9.4 write the result in a MIDI file
-  saveState = writeMidiFile("C:/temp/result.mid", midiSequence)
+  -- 9.4 Write the result in a MIDI file
+  saveState = writeMidiFile(result_path, midiSequence)
 end
